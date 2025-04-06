@@ -16,6 +16,58 @@ In this project I will be using faces that vary on social dimensions, particular
 - The response data from participants will be stored in dataframes and analysed and visualised using matplotlib.
 
 
+## Implementation plan
+#### Functions/class methods to create 
+- Location of images to be displayed
+    - to find the position on the screen to present the faces at
+    - the display should be such that the face images are presented along the circumference of a circle with radius R 
+    - and the faces are equidistant from each other (and not overlapping)
+    - this changes with the set size of the display, therefore a function to calculate those locations based on the set size is needed 
+- Randomizers that can randomly select
+    - the faces from the list of available faces
+    - set size of the display (and consequently the image positions as described above)
+    - the location at which the target face is presented
+    - the location of the target dot besides the face - left or right side of the face
+- Target dot placement
+    - a function to find the specific face marker locations from the database containing the image name and the location of the markers
+    - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses
+    - converts the pixel locations to degree units 
+    - draws a dot at a set distance from that location 
+#### Classes to create
+- Display 
+    - sets the size of the display
+    - viewing distance
+    - color of the display
+    - units of measurement 
+    - initializes a monitor with these parameters
+- Targets
+    - sets the size of target
+    - sets the location
+    - finds and places target dot at specified location 
+- key response
+    - sets valid keys for response (e.g. "f" if the target dot is on the left side of the face and "J" if its on the right side of the face)
+    - record key response
+    - record response time
+
+## Experiment flow
+
+instructions 
+
+trials (divided into blocks where the target is either a trustworthy or untrustworthy face)
+
+each trial 
+- random set size 4, 6, 8, 12
+- random target location 
+- random target dot location 
+- present stimuli
+- collect response 
+
+end experiment 
+
+Post experiment - data analysis 
+
+
+
 ### References
 
 Becker, D. V., Anderson, U. S., Mortensen, C. R., Neufeld, S. L., & Neel, R. (2011). The face in the crowd effect unconfounded: Happy faces, not angry faces, are more efficiently detected in single- and multiple-target visual search tasks. Journal of Experimental Psychology: General, 140(4), 637–659. https://doi.org/10.1037/a0024060
