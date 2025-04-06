@@ -20,6 +20,11 @@ In this project I will be using faces that vary on social dimensions, particular
     - set size of the display (and consequently the image positions as described above)
     - the location at which the target face is presented
     - the location of the target dot besides the face - left or right side of the face
+    - selecting distractor type for a given trial or a block of trials 
+        - i.e if the target is a trustworthy face, the distractors have to be either neutral or untrustworthy
+        - vice versa for untrustworthy faces. 
+        - once the target type is selected, only select images from outside of that type.
+        - unsure of the level at which this is to be implemented (trial or block level) 
 - Target dot placement
     - a function to find the specific face marker locations from the database containing the image name and the location of the markers
     - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses
@@ -48,7 +53,7 @@ In this project I will be using faces that vary on social dimensions, particular
     - displays the screen for one trial 
     - based on the parameters from the Target class
     - starts the timer for the response on each trial and ends when valid key response is made
-- Key response
+    - Key response
     - sets valid keys for response (e.g. "f" if the target dot is on the left side of the face and "J" if its on the right side of the face)
     - record key response
     - record response time
