@@ -6,15 +6,7 @@ In everyday life, we encounter a variety of faces and make inferences about obje
 
 Earlier research has shown that more objective attributes of faces such as race and age can be used as features in a visual search task (Craig & Lipp, 2018; Levin, 2000). The evidence suggests that emotional expressions can also been used as features for search and the some studies show that happy faces are found more quickly than angry faces (Becker et. al., 2011). There is also research that shows an interaction between race and emotion in a visual search paradigm (Otten, 2016). However, it is not known if more implicit and subjective attributes that can be gleaned from faces can be used to inform visual search. 
 
-In this project I will be using faces that vary on social dimensions, particularly trustworthiness and dominance, along with a visual search paradigm to explore whether these social dimensions can be used as features that can be searched for. If this information can be used during a visual search task, we expect the time taken to find the target to increase along with increase in the set size of the search display. If such a search is not possible, the response time would be higher across set sizes and the accuracy of the search would also be low. Additionally, it would be interesting to see if there are asymmetries in response time based on whether the task is to find trustworthy faces amongst untrustworthy faces or vice versa. 
-
-## Outline of implementation 
-
-- The face images used in the study is created and retrieved using a model that is able to generate faces and vary them along various social dimensions. Since the dimensions I am interested in is trustworthiness and dominance, I will be generating artificial face images that vary on these two dimensions while controlling for other attributes that might influence the search due to variation in low-level features. 
-- I will be creating functions such as a image size manipulator that varies the size of the images of the faces shown based on the set size of search display, and another function that calculates the radial location at which the faces should be displayed. 
-- I will be using python and PsychoPy to create the experiment flow and display that the participant can interact with and collect their key responses from. 
-- The response data from participants will be stored in dataframes and analysed and visualised using matplotlib.
-
+In this project I will be using faces that vary on social dimensions, particularly trustworthiness and dominance. The face images will be created using a model that is able to generate faces and vary them along various social dimensions. Since the dimensions I am interested in is trustworthiness and dominance, artificial face images that vary on these two dimensions are used as stimuli. Other attributes that might influence the search due to variation in low-level features are controlled for. This stimuli presented in a visual search paradigm will be used to explore whether these social dimensions can be used as features that can be searched for. If this information can be used during a visual search task, we expect the time taken to find the target to increase along with increase in the set size of the search display. If such a search is not possible, the response time would be higher across set sizes and the accuracy of the search would also be low. Additionally, it would be interesting to see if there are asymmetries in response time based on whether the task is to find trustworthy faces amongst untrustworthy faces or vice versa. 
 
 ## Implementation plan
 #### Functions/class methods to create 
@@ -33,6 +25,10 @@ In this project I will be using faces that vary on social dimensions, particular
     - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses
     - converts the pixel locations to degree units 
     - draws a dot at a set distance from that location 
+- response collection 
+    - function that records the key response 
+    - and the response time (current time - time at the onset of the display of the trial)
+    - saves data about the participant ID, trial type(whether the target was trustworthy or untrustworthy), correct target location (or correct response), set size, reaction time, current date, experiment start and end time 
 #### Classes to create
 - Display 
     - sets the size of the display
@@ -40,11 +36,19 @@ In this project I will be using faces that vary on social dimensions, particular
     - color of the display
     - units of measurement 
     - initializes a monitor with these parameters
+- Instructions
+    - reads in the text from the instructions.txt
+    - present the instructions at the start of the experiment 
+    - display break and end experiment messages
 - Targets
     - sets the size of target
     - sets the location
     - finds and places target dot at specified location 
-- key response
+- Trial 
+    - displays the screen for one trial 
+    - based on the parameters from the Target class
+    - starts the timer for the response on each trial and ends when valid key response is made
+- Key response
     - sets valid keys for response (e.g. "f" if the target dot is on the left side of the face and "J" if its on the right side of the face)
     - record key response
     - record response time
