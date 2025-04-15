@@ -15,10 +15,10 @@ In this project I will be using faces that vary on social dimensions, particular
     - to find the position on the screen to present the faces at ✅
     - the display should be such that the face images are presented along the circumference of a circle with radius R(✅)
     - and the faces are equidistant from each other (and not overlapping) (✅)
-    - this changes with the set size of the display, therefore a function to calculate those locations based on the set size is needed (✴️)
+    - this changes with the set size of the display, therefore a function to calculate those locations based on the set size is needed (✅)
 - Randomizers that can randomly select
     - the faces from the list of available faces according to the target and distractor valence (trustworthy or untrustworthy) (✅)
-    - set size of the display (and consequently the image positions as described above) (✴️)
+    - set size of the display (and consequently the image positions as described above) (✅)
     - the location at which the target face is presented (✅)
     - the location of the target dot besides the face - left or right side of the face
     - selecting distractor type for a given trial or a block of trials (✴️ - currently hardcoded, needs to be automated)
@@ -26,11 +26,11 @@ In this project I will be using faces that vary on social dimensions, particular
         - vice versa for untrustworthy faces. 
         - once the target type is selected, only select images from outside of that type.
         - unsure of the level at which this is to be implemented (trial or block level) 
-- Target dot placement
-    - a function to find the specific face marker locations from the database containing the image name and the location of the markers
-    - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses
-    - converts the pixel locations to degree units 
-    - draws a dot at a set distance from that location 
+- Target dot placement ✅
+    - a function to find the specific face marker locations from the database containing the image name and the location of the markers ✅
+    - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses ✅
+    - converts the pixel locations to degree units ✅
+    - draws a dot at a set distance from that location ✅
 - response collection 
     - function that records the key response 
     - and the response time (current time - time at the onset of the display of the trial)
