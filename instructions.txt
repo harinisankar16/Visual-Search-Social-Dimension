@@ -1,0 +1,15 @@
+Hi! Welcome to the experiment
+
+You will see a display of faces. 
+Your task is to search for the target face that is trustworthy.
+When you find the target, respond to the location of the marker next to the face. 
+
+press the LEFT arrow key if the marker 
+is on the left side of the face. 
+
+press the RIGHT arrow key if the marker 
+is on the right side of the face. 
+
+Respond as quickly and as accurately as you can.
+
+Press the SPACEBAR to begin.
