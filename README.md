@@ -1,4 +1,4 @@
-# bcog_200 Project Abstract 
+# Visual search for faces along social dimensions
 
 ## Abstract
 
