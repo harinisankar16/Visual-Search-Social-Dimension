@@ -21,36 +21,36 @@ In this project I will be using faces that vary on social dimensions, particular
     - set size of the display (and consequently the image positions as described above) (✅)
     - the location at which the target face is presented (✅)
     - the location of the target dot besides the face - left or right side of the face
-    - selecting distractor type for a given trial or a block of trials (✴️ - currently hardcoded, needs to be automated)
+    - selecting distractor type for a given trial or a block of trials ✅
         - i.e if the target is a trustworthy face, the distractors have to be either neutral or untrustworthy
-        - vice versa for untrustworthy faces. 
-        - once the target type is selected, only select images from outside of that type.
+        - vice versa for untrustworthy faces. ✅
+        - once the target type is selected, only select images from outside of that type.✅
         - unsure of the level at which this is to be implemented (trial or block level) 
 - Target dot placement ✅
     - a function to find the specific face marker locations from the database containing the image name and the location of the markers ✅
     - converts the location from the coordinate system that cv2 uses to the coordinate system that PsychoPy Uses ✅
     - converts the pixel locations to degree units ✅
     - draws a dot at a set distance from that location ✅
-- response collection 
-    - function that records the key response 
-    - and the response time (current time - time at the onset of the display of the trial)
-    - saves data about the participant ID, trial type(whether the target was trustworthy or untrustworthy), correct target location (or correct response), set size, reaction time, current date, experiment start and end time 
-#### Classes to create
-- Display 
+- response collection ✅
+    - function that records the key response ✅
+    - and the response time (current time - time at the onset of the display of the trial)✅
+    - saves data about the participant ID, trial type(whether the target was trustworthy or untrustworthy), correct target location (or correct response), set size, reaction time, current date, experiment start and end time ✅
+#### Classes and functions to create
+- Display ✅
     - sets the size of the display
     - viewing distance
     - color of the display
     - units of measurement 
     - initializes a monitor with these parameters
-- Instructions
+- Instructions✅
     - reads in the text from the instructions.txt
     - present the instructions at the start of the experiment 
     - display break and end experiment messages
-- Targets
+- Targets✅
     - sets the size of target
     - sets the location
     - finds and places target dot at specified location 
-- Trial 
+- Trial ✅
     - displays the screen for one trial 
     - based on the parameters from the Target class
     - starts the timer for the response on each trial and ends when valid key response is made
@@ -92,9 +92,9 @@ In this project I will be using faces that vary on social dimensions, particular
 
 ## References
 
-Becker, D. V., Anderson, U. S., Mortensen, C. R., Neufeld, S. L., & Neel, R. (2011). The face in the crowd effect unconfounded: Happy faces, not angry faces, are more efficiently detected in single- and multiple-target visual search tasks. Journal of Experimental Psychology: General, 140(4), 637–659. https://doi.org/10.1037/a0024060
-Craig, B. M., & Lipp, O. V. (2018). The relationship between visual search and categorization of own- and other-age faces. British Journal of Psychology, 109(4), 736–757. https://doi.org/10.1111/bjop.12297
+- Becker, D. V., Anderson, U. S., Mortensen, C. R., Neufeld, S. L., & Neel, R. (2011). The face in the crowd effect unconfounded: Happy faces, not angry faces, are more efficiently detected in single- and multiple-target visual search tasks. Journal of Experimental Psychology: General, 140(4), 637–659. https://doi.org/10.1037/a0024060
+- Craig, B. M., & Lipp, O. V. (2018). The relationship between visual search and categorization of own- and other-age faces. British Journal of Psychology, 109(4), 736–757. https://doi.org/10.1111/bjop.12297
 Levin, D. T. (2000). Race as a Visual Feature: Using Visual Search and Perceptual Discrimination Tasks to Understand Face Categories and the Cross-Race Recognition Deficit. Journal of Experimental Psychology: General, 129(4), 559–574. https://doi.org/10.10371/0096-3445.129.4.559
-Otten, M. (2016). Race Guides Attention in Visual Search. PLOS ONE, 11(2), e0149158. https://doi.org/10.1371/journal.pone.0149158
+- Otten, M. (2016). Race Guides Attention in Visual Search. PLOS ONE, 11(2), e0149158. https://doi.org/10.1371/journal.pone.0149158
 Peterson, J., Griffiths, T., Uddenberg, S., Todorov, A., & Suchow, J. W. (2022). Deep models of superficial face judgments. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.4041458
 
