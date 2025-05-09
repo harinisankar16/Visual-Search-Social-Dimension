@@ -1,6 +1,6 @@
 # Visual search for faces along social dimensions
 
-[Sample visual search display](visual_search_display.png)
+[Sample visual search display](./visual_search_display.png)
 
 This repository contains the demo and full version of the visual search across social dimensions experiment
 The demos are built using [PsychoPy](https://www.psychopy.org/), a Python library for creating psychology experiments.
