@@ -19,11 +19,12 @@ RESOLUTION = (1440, 900)
 UNITS = "deg"
 BACKGROUND_COLOR = "White"
 
-IMAGE_FILE_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/stimuli/WM_images"  # CHANGE THIS WHEN UPLOADING TO GIT
-STIM_DATA = "stim_data.csv"  # relative path
+IMAGE_FILE_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/stimuli/trustworthy_continuum_images"  # CHANGE THIS WHEN UPLOADING TO GIT
+STIM_DATA = "stim_data2.csv"  # relative path
 DATA_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/data"
 FIXATION_DUR = 1
 NUM_TRIALS = 2
+SET_SIZE = 6
 TRIAL_TYPE = [
     (1, -1),
     (1, 0),
@@ -31,7 +32,7 @@ TRIAL_TYPE = [
     (-1, 0),
 ]  # all possible trial types, first value is target valence, second value is distractor valence
 
-SET_SIZE = 12
+
 IMG_SIZE = 3.2
 
 
@@ -214,6 +215,62 @@ def get_trial_imgs(
     return image_data
 
 
+def trial_imgs_from_strip(
+    df, set_size=SET_SIZE, trial_type=TRIAL_TYPE[0]
+):  # TRIAL_TYPE[0] = trustworthy target, untrusworthy distractor
+
+    num_distractors = set_size - 1
+    target_valence = trial_type[0]
+    distractor_valence = trial_type[1]
+
+    # pick a random identity for each trial
+    rand_identity = random.randint(0, 9)
+    identity_df = df[df["identity"] == rand_identity]
+
+    distractor_df = identity_df[identity_df["attr_valence"] == distractor_valence]
+    distractor_images = distractor_df.sample(n=num_distractors, replace=True)
+    target_df = identity_df[identity_df["attr_valence"] == target_valence]
+    target_image = target_df.sample(n=1)
+
+    image_set = pd.concat([target_image, distractor_images]).reset_index(drop=False)
+
+    image_data = (
+        []
+    )  # create a list of dictionaries containing the image name and marker positions(in deg)
+
+    for row in image_set.itertuples(index=False):
+        x1, y1 = row.d1  # left ear marker
+        x2, y2 = row.d15  # right ear marker
+
+        x1_deg, y1_deg = pixel_to_deg_coords(
+            x1, y1, image_size_deg=IMG_SIZE, move_dist=0.5
+        )
+        x2_deg, y2_deg = pixel_to_deg_coords(
+            x2, y2, image_size_deg=IMG_SIZE, move_dist=0.5
+        )
+
+        if row.attr_valence == target_valence:
+            image_type = "target"
+        else:
+            image_type = "distractor"
+
+        image_data.append(
+            {
+                "image_name": row.image_name,
+                "image_type": image_type,
+                "left_marker": (x1_deg, y1_deg),
+                "right_marker": (x2_deg, y2_deg),
+            }
+        )
+
+    # later to retrieve
+    # image = image_data[0]  - first entry in image_data
+    # x = trial["d1_deg"][0] - getting the x coordinate for the left marker
+    # y = trial["d1_deg"][1] - getting the y coordinate for the left marker
+
+    return image_data
+
+
 def display_instructions(win, instr_file):
     with open(instr_file, "r") as file:
         instr_text = file.read()
@@ -325,6 +382,7 @@ def do_trial(win, image_stims, marker_stims):
 
     clock = core.Clock()
     win.flip()
+
     key_resp = event.waitKeys(keyList=["left", "right"], timeStamped=clock)
     key_resp = key_resp[
         0
@@ -371,8 +429,10 @@ def main() -> None:
 
     # main task
     trial_data = []
-    for trial in range(NUM_TRIALS):
-        image_data = get_trial_imgs(
+    for trial in range(
+        NUM_TRIALS
+    ):  # make it so it takes in a list of trials and it knows if its practice or not etc (for trial in trials)
+        image_data = trial_imgs_from_strip(
             stim_data, set_size=SET_SIZE, trial_type=TRIAL_TYPE[0]
         )
         trial = Trial(
@@ -392,6 +452,7 @@ def main() -> None:
         )
         trial_data.append(
             [
+                image_data,
                 trial.target_pos,
                 trial.target_marker_pos,
                 key_resp[0],
