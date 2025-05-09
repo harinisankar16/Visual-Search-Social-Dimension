@@ -18,9 +18,9 @@ RESOLUTION = (1440, 900)
 UNITS = "deg"
 BACKGROUND_COLOR = "White"
 
-IMAGE_FILE_PATH = "./stimuli/WM_images"
-STIM_DATA = "./stim_data.csv"  # relative path
-DATA_PATH = "./data"
+IMAGE_FILE_PATH = "stimuli/WM_images"
+STIM_DATA = "stim_data.csv"  # relative path
+DATA_PATH = "data"
 FIXATION_DUR = 1
 NUM_TRIALS = 2
 SET_SIZE = 6
