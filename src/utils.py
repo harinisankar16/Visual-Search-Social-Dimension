@@ -9,6 +9,7 @@ import random
 import datetime
 import sys
 import csv
+from config import TrialConfig, Display
 
 
 IMAGE_FILE_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/stimuli/WM_images"  # CHANGE THIS WHEN UPLOADING TO GIT
@@ -58,7 +59,7 @@ def load_stimdata(csv):
     return stim_data
 
 
-def get_img_locations(set_size=SET_SIZE):
+def get_img_locations(set_size):
 
     num_locations = set_size
     radius = 7.78  # later in a utils file, make code that calculates radius
@@ -109,7 +110,7 @@ def pixel_to_deg_coords(
 
 
 def get_trial_imgs(
-    df, set_size=SET_SIZE, trial_type=TRIAL_TYPE[0]
+    df, set_size=SET_SIZE, trial_type=TrialConfig.trial_type[0]
 ):  # TRIAL_TYPE[0] = trustworthy target, untrusworthy distractor
 
     num_distractors = set_size - 1
@@ -171,8 +172,14 @@ def display_instructions(win, instr_file):
 
 
 class Trial:
-    def __init__(self, win, image_data, img_pos_list, set_size, img_size=IMG_SIZE):
-        self.locations = img_pos_list
+    def __init__(
+        self,
+        win,
+        image_data,
+        set_size=TrialConfig.set_size,
+        img_size=TrialConfig.img_size,
+    ):  # if set size
+        self.locations = get_img_locations(set_size)
         self.rand_index = random.sample(range(0, set_size), set_size)
         self.image_data = image_data
         self.img_size = img_size
@@ -280,3 +287,27 @@ def do_trial(win, image_stims, marker_stims):
 
     return key_resp, this_resp
 
+
+def make_block(num_trials_per_block):
+    block_type_list = [1, 2]  # 1 if trustworthy target, 2 if untrustworthy target
+    set_size_list = [1, 3, 6, 12]
+    shuffled_block = random.shuffle(block_type_list)
+
+    all_trials = []
+    for block in shuffled_block:
+        trials = []
+        for set_size in set_size_list:
+            for trial_index in range(num_trials_per_block):
+                trials.append([block, set_size, trial_index])
+        random.shuffle(trials)
+    all_trials.extend(trials)
+
+    print(all_trials)
+
+
+def main() -> None:
+
+    make_block(20)
+
+    if __name__ == "__main__":
+        main()
