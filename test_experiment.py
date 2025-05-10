@@ -28,7 +28,7 @@ viewing_distance_cm: float = 57
 resolution_px: tuple[int, int] = (1440, 900)  # my mac1
 screen: int = 0
 units: Literal["deg", "rad"] = "deg"
-bg_color: str = "black"
+bg_color: str = "white"
 full_screen: bool = True
 center_deg: tuple[float, float] = (0, 0)
 
