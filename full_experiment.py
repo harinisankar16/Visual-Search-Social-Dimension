@@ -23,12 +23,10 @@ STIM_DATA = "stim_data.csv"  # relative path
 DATA_PATH = "data"
 FIXATION_DUR = 1
 NUM_TRIALS = 2
-SET_SIZE = 6
+SET_SIZE = 12
 TRIAL_TYPE = [
     (1, -1),
-    (1, 0),
     (-1, 1),
-    (-1, 0),
 ]  # all possible trial types, first value is target valence, second value is distractor valence
 
 
@@ -92,9 +90,10 @@ def participant_gui():
 
 
 def create_participant_file(participant_id, data_path=DATA_PATH):
-    date = datetime.datetime.now()
-    date = date.strftime("%y%m%d")
-    file_path = os.path.join(data_path, f"{date}_{participant_id}.csv")
+    now = datetime.datetime.now()
+    time = now.strftime("%H%M")
+    date = now.strftime("%y%m%d")
+    file_path = os.path.join(data_path, f"{date}_{time}_{participant_id}.csv")
     filepathexists = os.path.exists(file_path)
     if filepathexists:
         sys.exit("Filename" + file_path + "already_exists")
@@ -206,11 +205,6 @@ def get_trial_imgs(
             }
         )
 
-    # later to retrieve
-    # image = image_data[0]  - first entry in image_data
-    # x = trial["d1_deg"][0] - getting the x coordinate for the left marker
-    # y = trial["d1_deg"][1] - getting the y coordinate for the left marker
-
     return image_data
 
 
@@ -316,7 +310,8 @@ def fix_cross(win, fixation_duration):
     core.wait(fixation_duration)
 
 
-def do_trial(win, image_stims, marker_stims):
+def do_trial(win, image_stims, marker_stims, target_marker_pos):
+
     for stim in image_stims:
         stim.draw()
 
@@ -333,7 +328,9 @@ def do_trial(win, image_stims, marker_stims):
     if key_resp:
         this_resp = 1
 
-    return key_resp, this_resp
+    corr_resp = check_corr_resp(key_resp=key_resp, target_marker_pos=target_marker_pos)
+
+    return key_resp, this_resp, corr_resp
 
 
 def check_corr_resp(key_resp, target_marker_pos):
@@ -347,7 +344,16 @@ def check_corr_resp(key_resp, target_marker_pos):
 def save_data(data, participant_id):
     file_path = create_participant_file(participant_id=participant_id)
 
-    headers = ["target_pos", "target_marker_pos", "key_pressed", "rt", "iscorrect"]
+    headers = [
+        "participant_id",
+        "trial",
+        "time_stamp",
+        "target_pos",
+        "target_marker_pos",
+        "key_pressed",
+        "rt",
+        "iscorrect",
+    ]
 
     with open(file_path, "w", newline="") as file:
         writer = csv.writer(file)
@@ -370,9 +376,12 @@ def main() -> None:
     # instructions
     display_instructions(win=win, instr_file="instructions.txt")
 
+    # start overall clock
+    trial_clock = core.Clock()
+
     # main task
     trial_data = []
-    for trial in range(
+    for trial_num in range(
         NUM_TRIALS
     ):  # make it so it takes in a list of trials and it knows if its practice or not etc (for trial in trials)
         image_data = get_trial_imgs(
@@ -388,13 +397,17 @@ def main() -> None:
         this_resp = None
         while this_resp is None:
             fix_cross(win=win, fixation_duration=FIXATION_DUR)  # in seconds
-            key_resp, this_resp = do_trial(win, trial.image_stims, trial.marker_stims)
+            key_resp, this_resp, corr_resp = do_trial(
+                win, trial.image_stims, trial.marker_stims, trial.target_marker_pos
+            )
 
-        corr_resp = check_corr_resp(
-            key_resp=key_resp, target_marker_pos=trial.target_marker_pos
-        )
+        trial_timestamp = trial_clock.getTime()
+
         trial_data.append(
             [
+                participant_id,
+                trial_num,
+                trial_timestamp,
                 image_data,
                 trial.target_pos,
                 trial.target_marker_pos,

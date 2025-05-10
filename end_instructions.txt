@@ -1,3 +1,4 @@
 Yaay! You have reached the end of the Experiment!
 
 let your experimenter know that you have finished. 
+(press space to exit the gui)
