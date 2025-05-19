@@ -1,8 +1,10 @@
 Hi! Welcome to the experiment
 
 You will see a display of faces. 
-Your task is to search for the target face that is trustworthy.
+Your task is to search for the target that is either a TRUSTWORTHY or an UNTRUSTWORTHY face.
 When you find the target, respond to the location of the marker next to the face. 
+
+At the start of each block, you will be informed of the type of target you are looking for. 
 
 press the LEFT arrow key if the marker 
 is on the left side of the face. 

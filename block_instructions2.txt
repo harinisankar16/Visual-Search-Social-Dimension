@@ -1,0 +1,15 @@
+In this block 
+
+Your task is to find the UNTRUSTWORTHY target
+
+Remember:
+
+press the LEFT arrow key if the marker 
+is on the left side of the face. 
+
+press the RIGHT arrow key if the marker 
+is on the right side of the face. 
+
+Respond as quickly and as accurately as you can.
+
+Press the SPACEBAR to begin.
