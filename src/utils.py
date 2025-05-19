@@ -9,23 +9,63 @@ import random
 import datetime
 import sys
 import csv
-from config import TrialConfig, Display
+from src.config import TrialConfig, Display
 
+VIEWING_DISTANCE_IN_CM = 57
+MONITOR_WIDTH_IN_CM = 30.41
+RESOLUTION = (1440, 900)
+BACKGROUND_COLOR = "White"
+UNITS = "deg"
 
-IMAGE_FILE_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/stimuli/WM_images"  # CHANGE THIS WHEN UPLOADING TO GIT
-STIM_DATA = "stim_data.csv"  # relative path
-DATA_PATH = "/Users/harini/Library/CloudStorage/OneDrive-UniversityofIllinois-Urbana/Research/Visual search project/data"
 FIXATION_DUR = 1
-NUM_TRIALS = 2
-TRIAL_TYPE = [
-    (1, -1),
-    (1, 0),
-    (-1, 1),
-    (-1, 0),
-]  # all possible trial types, first value is target valence, second value is distractor valence
+IMAGE_FILE_PATH = "stimuli/WM_images"
+STIM_DATA = "stim_data.csv"  # relative path
+DATA_PATH = "data"
 
-SET_SIZE = 12
-IMG_SIZE = 3.2
+
+def setup():
+    monitor = create_monitor(
+        monitor_name="testMonitor",
+        width_in_cm=MONITOR_WIDTH_IN_CM,
+        viewing_distance_in_cm=VIEWING_DISTANCE_IN_CM,
+        resolution=RESOLUTION,
+    )
+    window = create_window(monitor=monitor)
+
+    return monitor, window
+
+
+def create_monitor(
+    monitor_name: str,
+    width_in_cm: float,
+    viewing_distance_in_cm: float,
+    resolution: tuple[int, int],
+) -> monitors.Monitor:
+    monitor = monitors.Monitor(name=monitor_name)
+    monitor.setSizePix(resolution)
+    monitor.setWidth(width_in_cm)
+    monitor.setDistance(viewing_distance_in_cm)
+    monitor.saveMon()
+    return monitor
+
+
+def create_window(
+    monitor: monitors.Monitor,
+    units: Literal["cm", "deg", "pix"] = UNITS,
+    screen_num: int = 0,
+    full_screen: bool = True,
+    background_color: str = BACKGROUND_COLOR,
+    size=RESOLUTION,
+) -> visual.Window:
+    window = visual.Window(
+        monitor=monitor,
+        size=size,
+        color=background_color,
+        units=units,
+        screen=screen_num,
+        fullscr=full_screen,
+    )
+    return window
 
 
 # create mini gui to enter participant number in
@@ -39,9 +79,10 @@ def participant_gui():
 
 # create file to save data to
 def create_participant_file(participant_id, data_path=DATA_PATH):
-    date = datetime.datetime.now()
-    date = date.strftime("%y%m%d")
-    file_path = os.path.join(data_path, f"{date}_{participant_id}.csv")
+    now = datetime.datetime.now()
+    time = now.strftime("%H%M")
+    date = now.strftime("%y%m%d")
+    file_path = os.path.join(data_path, f"{date}_{time}_{participant_id}.csv")
     filepathexists = os.path.exists(file_path)
     if filepathexists:
         sys.exit("Filename" + file_path + "already_exists")
@@ -49,7 +90,8 @@ def create_participant_file(participant_id, data_path=DATA_PATH):
     return file_path
 
 
-def load_stimdata(csv):
+# load stimulus data
+def load_stimdata(csv=STIM_DATA):
     stim_data = pd.read_csv(csv, dtype={"image_name": str, "attr_valence": int})
     # TODO: put inside of a preprocess function
     columns_to_transform = [f"d{i}" for i in range(68)]
@@ -59,6 +101,7 @@ def load_stimdata(csv):
     return stim_data
 
 
+# based on the set size of the display, get the location in degrees where the faces should be displayed
 def get_img_locations(set_size):
 
     num_locations = set_size
@@ -109,9 +152,12 @@ def pixel_to_deg_coords(
     return x_deg, y_deg
 
 
+# randomly select images to show as t
 def get_trial_imgs(
-    df, set_size=SET_SIZE, trial_type=TrialConfig.trial_type[0]
+    df, set_size=TrialConfig.set_size, trial_type=TrialConfig.trial_type[0]
 ):  # TRIAL_TYPE[0] = trustworthy target, untrusworthy distractor
+    # TRIAL_TYPE[1] = untrustworthy target, trusworthy distractor
+    # set size and trial_type here are defaults but in main.py we set them based on the all_trials list.
 
     num_distractors = set_size - 1
     target_valence = trial_type[0]
@@ -133,10 +179,10 @@ def get_trial_imgs(
         x2, y2 = row.d15  # right ear marker
 
         x1_deg, y1_deg = pixel_to_deg_coords(
-            x1, y1, image_size_deg=IMG_SIZE, move_dist=0.5
+            x1, y1, image_size_deg=TrialConfig.img_size, move_dist=0.5
         )
         x2_deg, y2_deg = pixel_to_deg_coords(
-            x2, y2, image_size_deg=IMG_SIZE, move_dist=0.5
+            x2, y2, image_size_deg=TrialConfig.img_size, move_dist=0.5
         )
 
         if row.attr_valence == target_valence:
@@ -152,11 +198,6 @@ def get_trial_imgs(
                 "right_marker": (x2_deg, y2_deg),
             }
         )
-
-    # later to retrieve
-    # image = image_data[0]  - first entry in image_data
-    # x = trial["d1_deg"][0] - getting the x coordinate for the left marker
-    # y = trial["d1_deg"][1] - getting the y coordinate for the left marker
 
     return image_data
 
@@ -176,7 +217,7 @@ class Trial:
         self,
         win,
         image_data,
-        set_size=TrialConfig.set_size,
+        set_size=TrialConfig.set_size,  # by default it accesses the value from trialconfig but in the main experiment, this value comes from all_trials list
         img_size=TrialConfig.img_size,
     ):  # if set size
         self.locations = get_img_locations(set_size)
@@ -256,7 +297,7 @@ class Trial:
         return target_pos, target_marker_pos
 
 
-def fix_cross(win, fixation_duration):
+def fix_cross(win, fixation_duration=FIXATION_DUR):
     fix_cross = visual.TextStim(
         win,
         text="+",
@@ -269,7 +310,8 @@ def fix_cross(win, fixation_duration):
     core.wait(fixation_duration)
 
 
-def do_trial(win, image_stims, marker_stims):
+def do_trial(win, image_stims, marker_stims, target_marker_pos):
+
     for stim in image_stims:
         stim.draw()
 
@@ -278,6 +320,7 @@ def do_trial(win, image_stims, marker_stims):
 
     clock = core.Clock()
     win.flip()
+
     key_resp = event.waitKeys(keyList=["left", "right"], timeStamped=clock)
     key_resp = key_resp[
         0
@@ -285,29 +328,91 @@ def do_trial(win, image_stims, marker_stims):
     if key_resp:
         this_resp = 1
 
-    return key_resp, this_resp
+    corr_resp = check_corr_resp(key_resp=key_resp, target_marker_pos=target_marker_pos)
+
+    return key_resp, this_resp, corr_resp
 
 
 def make_block(num_trials_per_block):
-    block_type_list = [1, 2]  # 1 if trustworthy target, 2 if untrustworthy target
+    block_type_list = [0, 1]  # 0 if trustworthy target, 1 if untrustworthy target
     set_size_list = [1, 3, 6, 12]
-    shuffled_block = random.shuffle(block_type_list)
+    random.shuffle(block_type_list)
 
     all_trials = []
-    for block in shuffled_block:
+
+    for block in block_type_list:
         trials = []
         for set_size in set_size_list:
-            for trial_index in range(num_trials_per_block):
-                trials.append([block, set_size, trial_index])
+            for _ in range(num_trials_per_block):
+                trials.append([block, set_size])
         random.shuffle(trials)
-    all_trials.extend(trials)
+        all_trials.extend(trials)
 
-    print(all_trials)
+    # Re-index after all shuffling
+    all_trials = [
+        [block, set_size, i] for i, (block, set_size) in enumerate(all_trials)
+    ]
+
+    return all_trials
+
+
+def check_corr_resp(key_resp, target_marker_pos):
+    if key_resp[0] == target_marker_pos:
+        corr_resp = 1
+    else:
+        corr_resp = 0
+    return corr_resp
+
+
+def save_data(data, participant_id):
+    file_path = create_participant_file(participant_id=participant_id)
+
+    headers = [
+        "participant_id",
+        "trial_index",
+        "block_type",
+        "set_size",
+        "time_stamp",
+        "trial_stim",
+        "target_pos",
+        "target_marker_pos",
+        "key_pressed",
+        "rt",
+        "iscorrect",
+    ]
+
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerows(data)
+
+
+def show_break_instr(win, instr_file):
+    with open(instr_file, "r") as file:
+        instr_text = file.read()
+
+    instr = visual.TextStim(win, text=instr_text, color="black", height=0.7, pos=(0, 0))
+    instr.draw()
+    win.flip()
+    event.waitKeys(keyList=["space"])
+
+
+def show_block_instr(win, block_type):
+    if block_type == 0:  # trustworthy target
+        instr_file = "block_instructions1.txt"
+    elif block_type == 1:  # untrustworthy target
+        instr_file = "block_instructions2.txt"
+
+    with open(instr_file, "r") as file:
+        instr_text = file.read()
+
+    instr = visual.TextStim(win, text=instr_text, color="black", height=0.7, pos=(0, 0))
+    instr.draw()
+    win.flip()
+    event.waitKeys(keyList=["space"])
 
 
 def main() -> None:
-
-    make_block(20)
 
     if __name__ == "__main__":
         main()

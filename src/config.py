@@ -1,4 +1,4 @@
-from dataclasses import dataclass, feild
+from dataclasses import dataclass, field
 from psychopy import visual, core, event, monitors, gui
 from psychopy.tools.monitorunittools import pix2deg, deg2pix
 from typing import Literal
@@ -27,7 +27,7 @@ class TrialConfig:
         (1, -1),
         (-1, 1),
     ]  # first value is target valence, second value is distractor valence
-    set_size: int = 12  # number of images in a given display
+    set_size: int = 12  # number of images in a given display default
     img_size: float = 3.2  # in deg units
 
 
