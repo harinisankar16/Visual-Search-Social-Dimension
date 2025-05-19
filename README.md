@@ -20,13 +20,14 @@ In this project I will be using faces that vary on social dimensions, particular
 - open the folder using the file browser icon
 - you should be able to see all the files and folders as you would in a typical code editor
 - select the file you want to run (eg : test_experiment.py) to open the code
+- run the full_experiment.py to see the full version of the experiment. 
 - run the file by pressing the green play button.
 - psychopy takes a few moments to load and run files so be patient! you will see the experiment window pop up automatically 
 
 #### Alternate setup option  
 - You can pip install Psychopy onto your environment and run the experiment directly from your code editor 
 However, this is a little tricky to do on recent mac operating systems and does not work as intended
-- there are fixes to this issue on the psychopy forums, but if you do not already have psychopy installed and running regularly, it is much easier to use the application version as described above.
+- there are fixes to this issue on the psychopy forums, but if you do not already have psychopy installed and running in this manner, it is much easier to use the application version as described above.
 
 ## Demo Files 
 
@@ -50,13 +51,13 @@ However, this is a little tricky to do on recent mac operating systems and does 
 - requires stimuli from stimuli/WM_images and stim_data.csv to run
 - saves data in the data folder with the date stamp and participant id number 
 - before the experiment begins, a small pop up window will prompt you to enter a participant id number. Enter a value to proceed to the experiment.
+- currently, it runs for 32 trials - 4 set size conditions x 2 trial type conditions x 4 trials each 
 
 ### config.py
 - contains the default configuration data for the psychopy experiment window, trial configuration and setup 
 
 ### utils.py
-- contains the functions that are called when running the experiment. 
-- as of 05-09-25, still working on creating a main.py file to run the experiment and you will see that the full_experiment.py contains all the functions needed for it to run inside it but full_experiment.py can be run without issues. 
+- contains the functions that are called when running  full_experiment. 
 
 ### stim_data.csv
 - contains the metadata of all the images in stimuli/WM_images and the coordinate positions of the face markers for each image
@@ -64,8 +65,13 @@ However, this is a little tricky to do on recent mac operating systems and does 
 ### data
 - stores the output csv file once the experiment is complete. 
 
-
-
+## Code Tests
+- if the experiment files are downloaded with the right file directory structure and is run using psychopy, the following visual checks will demonstrate that the program is running as intended.
+- the participant gui to enter the participant number opens up
+- psychopy initialises the experiment and escapes on command
+- if the entire experiment has run as intended, the data folder should contain your data with the current date and time stamp along with the given participant number
+- the data in the csv file should have 11 columns and 33 rows (1 header row and 32 trial rows)
+- if the functions within the experiment do not work properly, you will not be able to run the experiment to completion as psychopy will throw an error in the coder window. 
 
 
 ## Experiment flow
@@ -73,7 +79,7 @@ However, this is a little tricky to do on recent mac operating systems and does 
 - Instructions 
 - Trials (divided into blocks where the target is either a trustworthy or untrustworthy face)
     -   each trial 
-        - random set size 4, 6, 8, 12
+        - random set size 1, 3, 6, 12
         - random target location 
         - random target dot location 
         - present stimuli
